@@ -1,7 +1,7 @@
 use snafu::Snafu;
 
 #[derive(Debug, Snafu)]
-#[snafu(display("mint encountered an error: {msg}"))]
+#[snafu(display("Mod管理器 遇到了一个错误: {msg}"))]
 pub struct GenericError {
     pub msg: String,
 }

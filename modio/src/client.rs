@@ -147,7 +147,7 @@ impl Builder {
             Ok(_) => {}
             Err(_) => {
                 host = PROXY_HOST.parse().unwrap();
-                info!("Use MintCat Proxy Server Connect mod.io!");
+                info!("使用 MintCat 代理服务器连接mod.io!");
             }
         }
        

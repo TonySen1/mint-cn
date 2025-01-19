@@ -15,12 +15,12 @@ pub async fn get_latest_release() -> Result<GitHubRelease, GenericError> {
     reqwest::Client::builder()
         .user_agent(GITHUB_REQ_USER_AGENT)
         .build()
-        .generic("failed to construct reqwest client".to_string())?
+        .generic("无法构建reqwest客户端".to_string())?
         .get(GITHUB_RELEASE_URL)
         .send()
         .await
-        .generic("check self update request failed".to_string())?
+        .generic("检查自动更新请求失败".to_string())?
         .json::<GitHubRelease>()
         .await
-        .generic("check self update response is error".to_string())
+        .generic("检查自动更新无响应".to_string())
 }

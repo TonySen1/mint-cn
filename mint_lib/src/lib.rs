@@ -201,7 +201,7 @@ pub fn setup_logging<P: AsRef<Path>>(
     tracing::subscriber::set_global_default(subscriber)?;
 
     debug!("tracing subscriber setup");
-    info!("writing logs to {:?}", log_path.as_ref().display());
+    info!("日志写入 {:?}", log_path.as_ref().display());
 
     Ok(guard)
 }
