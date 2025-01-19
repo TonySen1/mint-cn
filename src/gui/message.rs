@@ -156,7 +156,7 @@ impl ResolveMods {
                     app.resolve_mod.clear();
                     app.state.mod_data.save().unwrap();
                     app.last_action = Some(LastAction::success(
-                        "mod成功解决".to_string(),
+                        "mod成功安装".to_string(),
                     ));
                 }
                 Err(ProviderError::NoProvider { url: _, factory }) => {
