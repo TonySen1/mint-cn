@@ -115,9 +115,9 @@ fn main() -> Result<()> {
     let _guard = mint_lib::setup_logging(dirs.data_dir.join("mint.log"), "mint")?;
     debug!("logging setup complete");
 
-    info!("config dir = {}", dirs.config_dir.display());
-    info!("cache dir = {}", dirs.cache_dir.display());
-    info!("data dir = {}", dirs.data_dir.display());
+    info!("配置文件目录 = {}", dirs.config_dir.display());
+    info!("缓存目录 = {}", dirs.cache_dir.display());
+    info!("数据目录 = {}", dirs.data_dir.display());
 
     let rt = tokio::runtime::Runtime::new().expect("Unable to create Runtime");
     debug!("tokio runtime created");

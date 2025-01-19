@@ -128,12 +128,12 @@ pub enum SortBy {
 impl SortBy {
     fn as_str(&self) -> &'static str {
         match self {
-            SortBy::Enabled => "Enabled",
-            SortBy::Name => "Name",
-            SortBy::Priority => "Priority",
-            SortBy::Provider => "Provider",
-            SortBy::RequiredStatus => "Is Required",
-            SortBy::ApprovalCategory => "Approval",
+            SortBy::Enabled => "启用",
+            SortBy::Name => "名称",
+            SortBy::Priority => "优先级",
+            SortBy::Provider => "提供者",
+            SortBy::RequiredStatus => "必须",
+            SortBy::ApprovalCategory => "已批准",
         }
     }
 }
@@ -209,9 +209,9 @@ impl LastAction {
         let duration = Instant::now().duration_since(self.timestamp);
         let seconds = duration.as_secs();
         if seconds < 60 {
-            format!("{}s ago", seconds)
+            format!("{}s 前", seconds)
         } else if seconds < 3600 {
-            format!("{}m ago", seconds / 60)
+            format!("{}m 前", seconds / 60)
         } else {
             ">1h ago".into()
         }
@@ -374,7 +374,7 @@ impl App {
                                 "V",
                                 ui,
                                 Some(egui::Color32::LIGHT_GREEN),
-                                Some("Does not contain any gameplay affecting features or changes"),
+                                Some("不包含任何影响功能或更改的游戏玩法"),
                             );
                         }
                         ApprovalStatus::Approved => {
@@ -382,7 +382,7 @@ impl App {
                                 "A",
                                 ui,
                                 Some(egui::Color32::LIGHT_BLUE),
-                                Some("Contains gameplay affecting features or changes"),
+                                Some("包含影响功能或更改的游戏玩法"),
                             );
                         }
                         ApprovalStatus::Sandbox => {
@@ -390,7 +390,7 @@ impl App {
                                 "S",
                                 ui, 
                                 Some(egui::Color32::LIGHT_YELLOW), 
-                                Some("Contains significant, possibly progression breaking, changes to gameplay")
+                                Some("包含重大的，可能破坏的游戏，对游戏玩法的变化")
                             );
                         }
                     }
@@ -402,7 +402,7 @@ impl App {
                                 ui,
                                 Some(egui::Color32::LIGHT_RED),
                                 Some(
-                                    "All lobby members must use this mod for it to work correctly!",
+                                    "所有大厅成员都必须使用此mod才能正常工作!",
                                 ),
                             );
                         }
@@ -411,7 +411,7 @@ impl App {
                                 "O",
                                 ui,
                                 None,
-                                Some("Clients are not required to install this mod to function"),
+                                Some("客机不需要安装此mod"),
                             );
                         }
                     }
@@ -420,16 +420,16 @@ impl App {
                         mk_searchable_modio_tag("QoL", ui, None, None);
                     }
                     if *gameplay {
-                        mk_searchable_modio_tag("Gameplay", ui, None, None);
+                        mk_searchable_modio_tag("游戏玩法", ui, None, None);
                     }
                     if *audio {
-                        mk_searchable_modio_tag("Audio", ui, None, None);
+                        mk_searchable_modio_tag("音频", ui, None, None);
                     }
                     if *visual {
-                        mk_searchable_modio_tag("Visual", ui, None, None);
+                        mk_searchable_modio_tag("视觉", ui, None, None);
                     }
                     if *framework {
-                        mk_searchable_modio_tag("Framework", ui, None, None);
+                        mk_searchable_modio_tag("框架", ui, None, None);
                     }
                 }
             };
@@ -447,7 +447,7 @@ impl App {
 
                 if ui
                     .add(toggle_switch(&mut mc.enabled))
-                    .on_hover_text_at_pointer("Enabled?")
+                    .on_hover_text_at_pointer("启用?")
                     .changed()
                 {
                     ctx.needs_save = true;
@@ -556,13 +556,13 @@ impl App {
                                 .range(RangeInclusive::new(-999, 999)),
                         )
                         .on_hover_text_at_pointer(
-                            "Load Priority\nIn case of asset conflict, mods with higher priority take precedent.\nCan have duplicate values.",
+                            "加载优先级\n在资产冲突的情况下，具有较高优先级的mod先例.\n可以具有重复的值.",
                         );
                     });
 
                     if ui
                         .button("📋")
-                        .on_hover_text_at_pointer("copy URL")
+                        .on_hover_text_at_pointer("复制URL")
                         .clicked()
                     {
                         ui.output_mut(|o| o.copied_text = mc.spec.url.to_string());
@@ -578,7 +578,7 @@ impl App {
                                     egui::RichText::new("\u{26A0}")
                                         .color(ui.visuals().warn_fg_color),
                                 )
-                                .on_hover_text_at_pointer("remove duplicate")
+                                .on_hover_text_at_pointer("删除重复")
                                 .clicked()
                         {
                             ctx.btn_remove = Some(row_index);
@@ -593,7 +593,7 @@ impl App {
                             .collect::<Vec<_>>();
 
                         if !missing_deps.is_empty() {
-                            let mut msg = "Add missing dependencies:".to_string();
+                            let mut msg = "添加缺失的依赖项:".to_string();
                             for dep in &missing_deps {
                                 msg.push('\n');
                                 msg.push_str(&dep.url);
@@ -640,7 +640,7 @@ impl App {
                         "file" => {
                             ui.label("📁");
                         }
-                        _ => unimplemented!("unimplemented provider kind"),
+                        _ => unimplemented!("未完成的提供商类型"),
                     }
 
                     let search = searchable_text(&info.name, &self.search_string, {
@@ -662,7 +662,7 @@ impl App {
                 } else {
                     if ui
                         .button("📋")
-                        .on_hover_text_at_pointer("Copy URL")
+                        .on_hover_text_at_pointer("复制URL")
                         .clicked()
                     {
                         ui.output_mut(|o| o.copied_text = mc.spec.url.to_string());
@@ -690,7 +690,7 @@ impl App {
                         ui.visuals_mut().widgets.active.weak_bg_fill = colors::DARKER_RED;
                         if ui
                             .add(Button::new(" 🗑 "))
-                            .on_hover_text_at_pointer("Delete mod")
+                            .on_hover_text_at_pointer("删除mod")
                             .clicked()
                         {
                             ctx.btn_remove = Some(row_index);
@@ -707,7 +707,7 @@ impl App {
                         } => {
                             if ui
                                 .add(toggle_switch(enabled))
-                                .on_hover_text_at_pointer("Enabled?")
+                                .on_hover_text_at_pointer("启用?")
                                 .changed()
                             {
                                 ctx.needs_save = true;
@@ -793,7 +793,7 @@ impl App {
             if let Some(profile) = profiles.get_mut(profile) {
                 ui_profile(ui, profile);
             } else {
-                ui.label("no such profile");
+                ui.label("没有这样的个人资料");
             }
         });
 
@@ -849,7 +849,7 @@ impl App {
                         })
                 });
             if let Some(MessageHandle { state, .. }) = &self.self_update_rid {
-                egui::Window::new("Update progress")
+                egui::Window::new("更新进度")
                     .collapsible(false)
                     .anchor(Align2::CENTER_CENTER, Vec2::ZERO)
                     .resizable(false)
@@ -868,11 +868,11 @@ impl App {
                                 SelfUpdateProgress::Complete => {
                                     ui.add(egui::ProgressBar::new(1.0).show_percentage());
                                     ui.label(
-                                        egui::RichText::new("Update successful.")
+                                        egui::RichText::new("更新成功.")
                                             .color(Color32::LIGHT_GREEN),
                                     );
 
-                                    if ui.button("Restart").clicked() {
+                                    if ui.button("重启").clicked() {
                                         self.needs_restart = true;
                                     }
                                 }
@@ -880,7 +880,7 @@ impl App {
                         });
                     });
             } else {
-                egui::Window::new(format!("Update available: {}", update.tag_name))
+                egui::Window::new(format!("更新可用: {}", update.tag_name))
                     .collapsible(false)
                     .anchor(Align2::CENTER_CENTER, Vec2::ZERO)
                     .resizable(false)
@@ -892,8 +892,8 @@ impl App {
                         );
                         ui.with_layout(egui::Layout::right_to_left(Align::TOP), |ui| {
                             if ui
-                                .add(egui::Button::new("Install update"))
-                                .on_hover_text("Download and install the update.")
+                                .add(egui::Button::new("安装更新"))
+                                .on_hover_text("下载并安装更新.")
                                 .clicked()
                             {
                                 self.self_update_rid = Some(message::SelfUpdate::send(
@@ -971,7 +971,7 @@ impl App {
                     });
 
                     ui.with_layout(Layout::right_to_left(Align::TOP), |ui| {
-                        if ui.button("Save").clicked() {
+                        if ui.button("保存").clicked() {
                             check = true;
                         }
                         if window.check_rid.is_some() {
@@ -1024,7 +1024,7 @@ impl App {
         if let Some(window) = &mut self.settings_window {
             let mut open = true;
             let mut try_save = false;
-            egui::Window::new("Settings")
+            egui::Window::new("设置")
                 .open(&mut open)
                 .resizable(false)
                 .show(ctx, |ui| {
@@ -1053,7 +1053,7 @@ impl App {
                             if is_committed(&res) {
                                 try_save = true;
                             }
-                            if ui.button("browse").clicked() {
+                            if ui.button("浏览").clicked() {
                                 if let Some(fsd_pak) = rfd::FileDialog::new()
                                     .add_filter("DRG Pak", &["pak"])
                                     .pick_file()
@@ -1066,27 +1066,27 @@ impl App {
                         ui.end_row();
 
                         let config_dir = &self.state.dirs.config_dir;
-                        ui.label("Config directory:");
+                        ui.label("配置文件目录:");
                         if ui.link(config_dir.display().to_string()).clicked() {
                             opener::open(config_dir).ok();
                         }
                         ui.end_row();
 
                         let cache_dir = &self.state.dirs.cache_dir;
-                        ui.label("Cache directory:");
+                        ui.label("缓存目录:");
                         if ui.link(cache_dir.display().to_string()).clicked() {
                             opener::open(cache_dir).ok();
                         }
                         ui.end_row();
 
                         let data_dir = &self.state.dirs.data_dir;
-                        ui.label("Data directory:");
+                        ui.label("数据目录:");
                         if ui.link(data_dir.display().to_string()).clicked() {
                             opener::open(data_dir).ok();
                         }
                         ui.end_row();
 
-                        ui.label("GUI theme:");
+                        ui.label("GUI 主题:");
                         ui.horizontal(|ui| {
                             ui.horizontal(|ui| {
                                 let config = &mut self.state.config;
@@ -1103,13 +1103,13 @@ impl App {
                         });
                         ui.end_row();
 
-                        ui.label("Mod providers:");
+                        ui.label("Mod 提供商:");
                         ui.end_row();
 
                         for provider_factory in ModStore::get_provider_factories() {
                             ui.label(provider_factory.id);
                             if ui.add_enabled(!provider_factory.parameters.is_empty(), egui::Button::new("⚙"))
-                                    .on_hover_text(format!("Open \"{}\" settings", provider_factory.id))
+                                    .on_hover_text(format!("打开 \"{}\" 设置", provider_factory.id))
                                     .clicked() {
                                 self.window_provider_parameters = Some(
                                     WindowProviderParameters::new(provider_factory, &self.state),
@@ -1120,7 +1120,7 @@ impl App {
                     });
 
                     ui.with_layout(egui::Layout::right_to_left(Align::TOP), |ui| {
-                        if ui.add_enabled(window.drg_pak_path_err.is_none(), egui::Button::new("save")).clicked() {
+                        if ui.add_enabled(window.drg_pak_path_err.is_none(), egui::Button::new("保存")).clicked() {
                             try_save = true;
                         }
                         if let Some(error) = &window.drg_pak_path_err {
@@ -1198,20 +1198,20 @@ impl App {
                             ui.add(toggle_switch(&mut self.lint_options.split_asset_pairs));
                             ui.end_row();
 
-                            ui.label("Mods containing unmodified game assets");
+                            ui.label("装有未修改的游戏资产的mod");
                             ui.add_enabled(
                                 self.state.config.drg_pak_path.is_some(),
                                 toggle_switch(&mut self.lint_options.unmodified_game_assets),
                             )
                             .on_disabled_hover_text(
-                                "This lint requires DRG pak path to be specified",
+                                "此项需要指定DRG PAK路径",
                             );
                             ui.end_row();
                         });
                     });
 
                     ui.horizontal(|ui| {
-                        if ui.button("Cancel").clicked() {
+                        if ui.button("取消").clicked() {
                             self.lints_toggle_window = None;
                         }
 
@@ -1220,7 +1220,7 @@ impl App {
                                 self.check_updates_rid.is_none()
                                     && self.integrate_rid.is_none()
                                     && self.lint_rid.is_none(),
-                                egui::Button::new("Generate report"),
+                                egui::Button::new("生成报告"),
                             )
                             .clicked()
                         {
@@ -1536,10 +1536,10 @@ impl App {
                                                     files.iter().for_each(|(file, kind)| {
                                                         match kind {
                                                             SplitAssetPair::MissingUasset => {
-                                                                ui.label(format!("`{file}` missing matching .uasset file"));
+                                                                ui.label(format!("`{file}` 缺少匹配.uasset文件"));
                                                             },
                                                             SplitAssetPair::MissingUexp => {
-                                                                ui.label(format!("`{file}` missing matching .uexp file"));
+                                                                ui.label(format!("`{file}` 缺少匹配.UUEXP文件"));
                                                             }
                                                         }
                                                     });
@@ -1553,7 +1553,7 @@ impl App {
                                     if !unmodified_game_assets_mods.is_empty() {
                                         CollapsingHeader::new(
                                             RichText::new(
-                                                "⚠ Mod(s) with unmodified game assets detected",
+                                                "⚠ 被检测到未修改的游戏资产的mods",
                                             )
                                             .color(AMBER),
                                         )
@@ -1562,7 +1562,7 @@ impl App {
                                             unmodified_game_assets_mods.iter().for_each(|(r#mod, files)| {
                                                 CollapsingHeader::new(
                                                     RichText::new(format!(
-                                                        "⚠ {} includes unmodified game assets",
+                                                        "⚠ {} 包括未修改的游戏资产",
                                                         r#mod.url
                                                     ))
                                                     .color(AMBER),
@@ -1764,7 +1764,7 @@ impl eframe::App for App {
                     |ui| {
                         if let Some(args) = &self.args {
                             if ui
-                                .button("Launch game")
+                                .button("启动游戏")
                                 .on_hover_ui(|ui| {
                                     for arg in args {
                                         ui.label(arg);
@@ -1786,12 +1786,12 @@ impl eframe::App for App {
                         }
 
                         ui.add_enabled_ui(self.state.config.drg_pak_path.is_some(), |ui| {
-                            let mut button = ui.button("Apply changes").on_hover_text(
-                                "Install the hook dll to game folder and regenerate mod bundle",
+                            let mut button = ui.button("应用更改").on_hover_text(
+                                "安装钩子dll到游戏文件夹并重新生成mod包",
                             );
                             if self.state.config.drg_pak_path.is_none() {
                                 button = button.on_disabled_hover_text(
-                                    "DRG install not found. Configure it in the settings menu.",
+                                    "找不到DRG安装。在“设置”菜单中配置它.",
                                 );
                             }
 
@@ -1826,12 +1826,12 @@ impl eframe::App for App {
                         });
 
                         ui.add_enabled_ui(self.state.config.drg_pak_path.is_some(), |ui| {
-                            let mut button = ui.button("Uninstall all").on_hover_text(
-                                "Remove the hook dll and mod bundle from game folder",
+                            let mut button = ui.button("卸载全部").on_hover_text(
+                                "从游戏文件夹中删除MOD（只会删除已标记🗑的mod）",
                             );
                             if self.state.config.drg_pak_path.is_none() {
                                 button = button.on_disabled_hover_text(
-                                    "DRG install not found. Configure it in the settings menu.",
+                                    "安装找不到DRG。在“设置”菜单中配置它.",
                                 );
                             }
                             if button.clicked() {
@@ -1853,13 +1853,13 @@ impl eframe::App for App {
                                         },
                                     );
 
-                                    debug!("uninstalling mods: pak_path = {}", pak_path.display());
+                                    debug!("卸载mod: pak_path = {}", pak_path.display());
                                     self.last_action = Some(match uninstall(pak_path, mods) {
                                         Ok(()) => LastAction::success(
-                                            "Successfully uninstalled mods".to_string(),
+                                            "成功卸载的mod".to_string(),
                                         ),
                                         Err(e) => LastAction::failure(format!(
-                                            "Failed to uninstall mods: {e}"
+                                            "无法卸载mod: {e}"
                                         )),
                                     })
                                 }
@@ -1867,9 +1867,9 @@ impl eframe::App for App {
                         });
 
                         if ui
-                            .button("Update cache")
+                            .button("更新缓存")
                             .on_hover_text(
-                                "Checks for updates for all mods and updates local cache",
+                                "检查所有mod和更新本地缓存 耗时可能较长",
                             )
                             .clicked()
                         {
@@ -1879,13 +1879,13 @@ impl eframe::App for App {
                     },
                 );
                 if self.integrate_rid.is_some() {
-                    if ui.button("Cancel").clicked() {
+                    if ui.button("取消").clicked() {
                         self.integrate_rid.take().unwrap().handle.abort();
                     }
                     ui.spinner();
                 }
                 if self.update_rid.is_some() {
-                    if ui.button("Cancel").clicked() {
+                    if ui.button("取消").clicked() {
                         self.update_rid.take().unwrap().handle.abort();
                     }
                     ui.spinner();
@@ -1898,14 +1898,14 @@ impl eframe::App for App {
                 //     self.lints_toggle_window = Some(WindowLintsToggle);
                 // }
 
-                if ui.button("⚙").on_hover_text("Open settings").clicked() {
+                if ui.button("⚙").on_hover_text("打开设置").clicked() {
                     self.settings_window = Some(WindowSettings::new(&self.state));
                 }
                 if let Some(available_update) = &self.available_update {
                     if ui
                         .button(egui::RichText::new("\u{26A0}").color(ui.visuals().warn_fg_color))
                         .on_hover_text(format!(
-                            "Update available: {}\n{}",
+                            "更新可用: {}\n{}",
                             available_update.tag_name, available_update.html_url
                         ))
                         .clicked()
@@ -1923,7 +1923,7 @@ impl eframe::App for App {
                         let msg = match &last_action.status {
                             LastActionStatus::Success(msg) => {
                                 ui.label(
-                                    egui::RichText::new("STATUS")
+                                    egui::RichText::new("状态")
                                         .color(Color32::BLACK)
                                         .background_color(Color32::LIGHT_GREEN),
                                 );
@@ -1931,7 +1931,7 @@ impl eframe::App for App {
                             }
                             LastActionStatus::Failure(msg) => {
                                 ui.label(
-                                    egui::RichText::new("STATUS")
+                                    egui::RichText::new("状态")
                                         .color(Color32::BLACK)
                                         .background_color(Color32::LIGHT_RED),
                                 );
@@ -1954,7 +1954,7 @@ impl eframe::App for App {
             let buttons = |ui: &mut Ui, mod_data: &mut ModData| {
                 if ui
                     .button(" 📋 ")
-                    .on_hover_text_at_pointer("Copy profile mods")
+                    .on_hover_text_at_pointer("复制mod配置文件")
                     .clicked()
                 {
                     let mut mods = Vec::new();
@@ -1980,7 +1980,7 @@ impl eframe::App for App {
 
             if profile_bar::ui(
                 ui,
-                "profile",
+                "配置文件",
                 self.state.mod_data.deref_mut().deref_mut(),
                 Some(buttons),
             ) {
@@ -2011,7 +2011,7 @@ impl eframe::App for App {
                         self.resolve_mod_rid.is_none(),
                         egui::TextEdit::singleline(&mut self.resolve_mod)
                             .layouter(&mut multiline_layouter)
-                            .hint_text("Add mod..."),
+                            .hint_text("添加 mod..."),
                     );
                     if is_committed(&resolve) {
                         message::ResolveMods::send(self, ctx, self.parse_mods(), false);
@@ -2023,7 +2023,7 @@ impl eframe::App for App {
             let profile = self.state.mod_data.active_profile.clone();
 
             ui.horizontal(|ui| {
-                ui.label("Sort by: ");
+                ui.label("排序方式: ");
 
                 let (mut sort_category, mut is_ascending) = self
                     .get_sorting_config()
@@ -2034,7 +2034,7 @@ impl eframe::App for App {
                     .selected_text(
                         {
                             match sort_category {
-                                None => "Manual",
+                                None => "自定义",
                                 Some(category) => category.as_str(),
                             }
                         }
@@ -2042,7 +2042,7 @@ impl eframe::App for App {
                     )
                     .show_ui(ui, |ui| {
                         if ui
-                            .selectable_value(&mut sort_category, None, "Manual")
+                            .selectable_value(&mut sort_category, None, "自定义")
                             .clicked()
                         {
                             self.update_sorting_config(sort_category, is_ascending);
@@ -2058,23 +2058,23 @@ impl eframe::App for App {
                         }
                     });
 
-                ui.label("Order: ");
+                ui.label("排序: ");
 
                 ui.add_enabled_ui(sort_category.is_some(), |ui| {
                     egui::ComboBox::from_id_salt("order")
                         .selected_text(match is_ascending {
-                            true => "Ascending",
-                            false => "Descending",
+                            true => "升序",
+                            false => "降序",
                         })
                         .show_ui(ui, |ui| {
                             if ui
-                                .selectable_value(&mut is_ascending, true, "Ascending")
+                                .selectable_value(&mut is_ascending, true, "升序")
                                 .clicked()
                             {
                                 self.update_sorting_config(sort_category, is_ascending);
                             }
                             if ui
-                                .selectable_value(&mut is_ascending, false, "Descending")
+                                .selectable_value(&mut is_ascending, false, "降序")
                                 .clicked()
                             {
                                 self.update_sorting_config(sort_category, is_ascending);
@@ -2094,7 +2094,7 @@ impl eframe::App for App {
                         .unwrap_or(false)
                 });
 
-                let mut text_edit = egui::TextEdit::singleline(search_string).hint_text("Search");
+                let mut text_edit = egui::TextEdit::singleline(search_string).hint_text("搜索");
                 if !any_matches {
                     text_edit = text_edit.text_color(ui.visuals().error_fg_color);
                 }

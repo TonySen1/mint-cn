@@ -107,7 +107,7 @@ where
             ui.visuals_mut().widgets.active.weak_bg_fill = colors::DARKER_RED;
             if ui
                 .button(" 🗑 ")
-                .on_hover_text_at_pointer(format!("Delete {name}"))
+                .on_hover_text_at_pointer(format!("删除 {name}"))
                 .clicked()
             {
                 entries.remove_selected();
@@ -127,7 +127,7 @@ where
                 ui.visuals_mut().widgets.hovered.weak_bg_fill = colors::DARK_GREEN;
                 ui.visuals_mut().widgets.active.weak_bg_fill = colors::DARKER_GREEN;
                 ui.button(" ➕ ")
-                    .on_hover_text_at_pointer(format!("Add new {name}"))
+                    .on_hover_text_at_pointer(format!("添加新的 {name}"))
             })
             .inner;
 
@@ -157,7 +157,7 @@ where
     ui.add_enabled_ui(true, |ui| {
         let response = ui
             .button(" ✏ ")
-            .on_hover_text_at_pointer(format!("Rename {name}"));
+            .on_hover_text_at_pointer(format!("重命名 {name}"));
         let popup_id = ui.make_persistent_id(format!("rename-{name}"));
         if response.clicked() {
             ui.memory_mut(|mem| mem.open_popup(popup_id));
@@ -183,7 +183,7 @@ where
 {
     let response = ui
         .button(" 🗐 ")
-        .on_hover_text_at_pointer(format!("Duplicate {name}"));
+        .on_hover_text_at_pointer(format!("复制 {name}"));
     let popup_id = ui.make_persistent_id(format!("duplicate-{name}"));
     if response.clicked() {
         ui.memory_mut(|mem| mem.open_popup(popup_id));
@@ -194,7 +194,7 @@ where
         name,
         popup_id,
         response,
-        |state| format!("{} - Copy", state.selected_name()),
+        |state| format!("{} - 复制", state.selected_name()),
         |state, name| {
             state.duplicate_selected(name);
             *modified = true;
@@ -250,14 +250,14 @@ fn mk_name_popup<E, N>(
 
                 let res = ui.add(
                     egui::TextEdit::singleline(&mut popup.buffer)
-                        .hint_text(format!("Enter new {name} name")),
+                        .hint_text(format!("输入新 {name} 名称")),
                 );
                 if popup.buffer_needs_prefill_and_focus {
                     res.request_focus();
                 }
 
                 ui.horizontal(|ui| {
-                    if ui.button("Cancel").clicked() {
+                    if ui.button("取消").clicked() {
                         ui.memory_mut(|mem| mem.close_popup());
                     }
 

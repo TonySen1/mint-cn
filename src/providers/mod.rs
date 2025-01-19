@@ -86,7 +86,7 @@ pub enum ProviderError {
     ModCtxtIoError { source: std::io::Error, mod_id: u32 },
     #[snafu(transparent)]
     BlobCacheError { source: BlobCacheError },
-    #[snafu(display("could not find mod provider for {url}"))]
+    #[snafu(display("找不到mod文件 {url}"))]
     ProviderNotFound { url: String },
     NoProvider {
         url: String,
@@ -98,27 +98,27 @@ pub enum ProviderError {
     RequestFailed { source: reqwest::Error, url: String },
     #[snafu(display("response from <{url}> failed: {source}"))]
     ResponseError { source: reqwest::Error, url: String },
-    #[snafu(display("mime from <{url}> contains non-ascii characters"))]
+    #[snafu(display("来自 <{url}> 包含非ASCII字符"))]
     InvalidMime {
         source: reqwest::header::ToStrError,
         url: String,
     },
-    #[snafu(display("unexpected content type from <{url}>: {found_content_type}"))]
+    #[snafu(display("意外的内容类型 <{url}>: {found_content_type}"))]
     UnexpectedContentType {
         found_content_type: String,
         url: String,
     },
-    #[snafu(display("error while fetching mod <{url}>"))]
+    #[snafu(display("获取mod时错误 <{url}>"))]
     FetchError { source: reqwest::Error, url: String },
-    #[snafu(display("error processing <{url}> while writing to local buffer"))]
+    #[snafu(display("错误处理 <{url}> 写入本地缓冲区时"))]
     BufferIoError { source: std::io::Error, url: String },
-    #[snafu(display("preview mod links cannot be added directly, please subscribe to the mod on mod.io and and then use the non-preview link"))]
+    #[snafu(display("预览mod链接无法直接添加，请在mod.io上订阅mod，然后使用非预浏览链接"))]
     PreviewLink { url: String },
-    #[snafu(display("mod <{url}> does not have an associated modfile"))]
+    #[snafu(display("mod <{url}> 没有关联的mod文件"))]
     NoAssociatedModfile { url: String },
-    #[snafu(display("multiple mods returned for name \"{name_id}\""))]
+    #[snafu(display("返回了多个mod的名称 \"{name_id}\""))]
     AmbiguousModNameId { name_id: String },
-    #[snafu(display("no mods returned for name \"{name_id}\""))]
+    #[snafu(display("没有返回mods的名称 \"{name_id}\""))]
     NoModsForNameId { name_id: String },
 }
 

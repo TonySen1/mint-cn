@@ -27,7 +27,6 @@ use crate::{
 use mint_lib::error::GenericError;
 use mint_lib::mod_info::MetaConfig;
 use mint_lib::update::GitHubRelease;
-use crate::integrate::error::SelfUpdateFailedSnafu;
 
 #[derive(Debug)]
 pub struct MessageHandle<S> {
@@ -157,13 +156,13 @@ impl ResolveMods {
                     app.resolve_mod.clear();
                     app.state.mod_data.save().unwrap();
                     app.last_action = Some(LastAction::success(
-                        "mods successfully resolved".to_string(),
+                        "mod成功解决".to_string(),
                     ));
                 }
                 Err(ProviderError::NoProvider { url: _, factory }) => {
                     app.window_provider_parameters =
                         Some(WindowProviderParameters::new(factory, &app.state));
-                    app.last_action = Some(LastAction::failure("no provider".to_string()));
+                    app.last_action = Some(LastAction::failure("没有提供商".to_string()));
                 }
                 Err(e) => {
                     error!("{}", e);
@@ -212,8 +211,8 @@ impl Integrate {
         if Some(self.rid) == app.integrate_rid.as_ref().map(|r| r.rid) {
             match self.result {
                 Ok(()) => {
-                    info!("integration complete");
-                    app.last_action = Some(LastAction::success("integration complete".to_string()));
+                    info!("整合完成");
+                    app.last_action = Some(LastAction::success("整合完成".to_string()));
                 }
                 Err(ref e)
                     if let IntegrationError::ProviderError { ref source } = e
@@ -221,7 +220,7 @@ impl Integrate {
                 {
                     app.window_provider_parameters =
                         Some(WindowProviderParameters::new(factory, &app.state));
-                    app.last_action = Some(LastAction::failure("no provider".to_string()));
+                    app.last_action = Some(LastAction::failure("没有提供商".to_string()));
                 }
                 Err(e) => {
                     error!("{}", e);
@@ -280,15 +279,15 @@ impl UpdateCache {
         if Some(self.rid) == app.update_rid.as_ref().map(|r| r.rid) {
             match self.result {
                 Ok(()) => {
-                    info!("cache update complete");
+                    info!("缓存更新完成");
                     app.last_action = Some(LastAction::success(
-                        "successfully updated cache".to_string(),
+                        "成功更新了缓存".to_string(),
                     ));
                 }
                 Err(ProviderError::NoProvider { url: _, factory }) => {
                     app.window_provider_parameters =
                         Some(WindowProviderParameters::new(factory, &app.state));
-                    app.last_action = Some(LastAction::failure("no provider".to_string()));
+                    app.last_action = Some(LastAction::failure("没有提供商".to_string()));
                 }
                 Err(e) => {
                     error!("{}", e);
@@ -309,7 +308,7 @@ pub struct CheckUpdates {
 
 impl CheckUpdates {
     pub fn send(app: &mut App, ctx: &egui::Context) {
-        info!("Start Check Update ....");
+        info!("开始检查更新 ....");
         let rid = app.request_counter.next();
         let tx = app.tx.clone();
         let ctx = ctx.clone();
@@ -348,7 +347,7 @@ impl CheckUpdates {
                         }
                     }
                 }
-                Err(e) => tracing::warn!("failed to fetch update {e}"),
+                Err(e) => tracing::warn!("无法获取更新 {e}"),
             }
         }
     }
@@ -470,10 +469,10 @@ impl LintMods {
         if Some(self.rid) == app.lint_rid.as_ref().map(|r| r.rid) {
             match self.result {
                 Ok(report) => {
-                    info!("lint mod report complete");
+                    info!("mod报告完成");
                     app.lint_report = Some(report);
                     app.last_action =
-                        Some(LastAction::success("lint mod report complete".to_string()));
+                        Some(LastAction::success("mod报告完成".to_string()));
                 }
                 Err(ref e)
                     if let IntegrationError::ProviderError { ref source } = e
@@ -481,7 +480,7 @@ impl LintMods {
                 {
                     app.window_provider_parameters =
                         Some(WindowProviderParameters::new(factory, &app.state));
-                    app.last_action = Some(LastAction::failure("no provider".to_string()));
+                    app.last_action = Some(LastAction::failure("没有提供商".to_string()));
                 }
                 Err(e) => {
                     error!("{}", e);
@@ -569,15 +568,15 @@ impl SelfUpdate {
         if Some(self.rid) == app.self_update_rid.as_ref().map(|r| r.rid) {
             match self.result {
                 Ok(original_exe_path) => {
-                    info!("self update complete");
+                    info!("自动更新完成");
                     app.original_exe_path = Some(original_exe_path);
-                    app.last_action = Some(LastAction::success("self update complete".to_string()));
+                    app.last_action = Some(LastAction::success("自动更新完成".to_string()));
                 }
                 Err(e) => {
-                    error!("self update failed");
+                    error!("自动更新失败");
                     error!("{:#?}", e);
                     app.self_update_rid = None;
-                    app.last_action = Some(LastAction::failure("self update failed".to_string()));
+                    app.last_action = Some(LastAction::failure("自动更新失败".to_string()));
                 }
             }
             app.integrate_rid = None;
@@ -631,10 +630,10 @@ async fn self_update_async(
     } else if cfg!(target_os = "linux") {
         "mint-x86_64-unknown-linux-gnu.zip"
     } else {
-        unimplemented!("unsupported platform");
+        unimplemented!("不受支持的平台");
     };
 
-    info!("downloading update");
+    info!("下载更新");
 
     let response = client
         .get(format!(
@@ -691,17 +690,17 @@ async fn self_update_async(
             } else if cfg!(target_os = "linux") {
                 "mint"
             } else {
-                unimplemented!("unsupported platform");
+                unimplemented!("不受支持的平台");
             };
 
-            info!("extracting downloaded update archive");
+            info!("提取下载的更新文件");
             self_update::Extract::from_source(&tmp_archive_path)
                 .archive(self_update::ArchiveKind::Zip)
                 .extract_file(tmp_dir.path(), bin_name)
                 .map_err(Into::into)
                 .with_context(|_| SelfUpdateFailedSnafu)?;
 
-            info!("replacing old executable with new executable");
+            info!("用新的可执行文件替换旧可执行文件");
             let tmp_file = tmp_dir.path().join("replacement_tmp");
             let bin_path = tmp_dir.path().join(bin_name);
 
@@ -715,7 +714,7 @@ async fn self_update_async(
 
             #[cfg(target_os = "linux")]
             {
-                info!("setting executable permission on new executable");
+                info!("在新的可执行文件上设置可执行文件");
                 use std::os::unix::fs::PermissionsExt;
                 fs::set_permissions(&original_exe_path, std::fs::Permissions::from_mode(0o755))
                     .unwrap();
@@ -727,7 +726,7 @@ async fn self_update_async(
 
     tx.send(SelfUpdateProgress::Complete).await.unwrap();
 
-    info!("update successful");
+    info!("更新成功");
 
     Ok(original_exe_path)
 }
