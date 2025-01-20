@@ -201,6 +201,7 @@ pub fn setup_logging<P: AsRef<Path>>(
     tracing::subscriber::set_global_default(subscriber)?;
 
     debug!("tracing subscriber setup");
+    info!("该版本由 不是老师 汉化 https://github.com/TonySen1/mint-cn");
     info!("日志写入 {:?}", log_path.as_ref().display());
 
     Ok(guard)
